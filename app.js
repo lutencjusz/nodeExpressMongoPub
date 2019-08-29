@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const app = express(); // dla express domyślną aplikacją jest app.js i musi być załadowana przed ...Routers
 app.set('view engine', 'pug'); // automatycznie ustawia template engine na pug
@@ -71,6 +72,8 @@ app.use(hpp({ // chroni przed błędnymi parametrami ignorując je lub uwzględn
     ]
 }));
 if (process.env.NODE_ENV === 'development') console.log('załadowano hpp i ustawiono whiteliste na parametry...');
+
+app.use(compression()) // kompresuje tekst wysyłany do klienta
 
 app.use((req, res, next) => {
     // ta funkcja musi posiadać trzy argumenty oraz musi być przed app.route

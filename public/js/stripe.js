@@ -7,7 +7,7 @@ var stripe = Stripe('pk_test_fkb8sZZaeyNKeamMOnCt5Egu00sPMtjCwx'); // pobiera St
 
 export const zakupWycieczke = async wycieczkaId => { // wycieczkaId powstaje ze strony data-wycieczka-id
     try {
-        const sesja = await axios(`http://127.0.0.1:4000/api/v1/platnosci/checkout-sesja/${wycieczkaId}`); // uproszczona wersja wysyłania GET
+        const sesja = await axios(`/api/v1/platnosci/checkout-sesja/${wycieczkaId}`); // uproszczona wersja wysyłania GET
         await stripe.redirectToCheckout({ // potwierdza płatność
             sessionId: sesja.data.sesja.id
         });

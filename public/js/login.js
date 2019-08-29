@@ -9,7 +9,7 @@ export const login = async (email, password) => {
     try {
         const wynik = await axios({ // wykonuje podzapytanie do bazy
             method: 'POST',
-            url: 'http://127.0.0.1:4000/api/v1/uzytkownicy/login',
+            url: '/api/v1/uzytkownicy/login',
             data: {
                 email,
                 password
@@ -31,7 +31,7 @@ export const logout = async () => {
     try {
         const wynik = await axios({ // wykonuje podzapytanie do bazy
             method: 'GET',
-            url: 'http://127.0.0.1:4000/api/v1/uzytkownicy/logout',
+            url: '/api/v1/uzytkownicy/logout',
         });
         if (wynik.data.status === 'ok') {
             if (location.pathname === '/me') { // jeżeli po wylogowaniu się jest na /me to będzie błąd

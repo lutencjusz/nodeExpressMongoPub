@@ -10,8 +10,8 @@ export const updateUstawienia = async (data, type) => {
     try {
 
         const url = type === 'hasło' ?
-            'http://127.0.0.1:4000/api/v1/uzytkownicy/updateMyPassword' :
-            'http://127.0.0.1:4000/api/v1/uzytkownicy/updateMe';
+            '/api/v1/uzytkownicy/updateMyPassword' :
+            '/api/v1/uzytkownicy/updateMe';
 
         const wynik = await axios({ // wykonuje podzapytanie do bazy
             method: 'PATCH',
