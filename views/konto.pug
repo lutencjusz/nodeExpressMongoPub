@@ -1,0 +1,66 @@
+extends baza
+
+mixin elementNawigacji(link, tekst, ikona, aktywny)
+  li(class=`${aktywny ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${ikona}`)
+      | #{tekst}
+
+block zawartosc
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +elementNawigacji('#', 'Ustawienia', 'settings', true)
+          +elementNawigacji('/moje-wycieczki', 'Moje wycieczki', 'briefcase', true)
+          +elementNawigacji('#', 'Moje recenzje', 'star', true)
+          +elementNawigacji('#', 'Rozliczenia', 'credit-card', true)
+
+        - if (uzytkownik.role === 'admin')
+          .admin-nav
+            h5.admin-nav__heading Administrator
+              ul.side-nav
+                +elementNawigacji('#', 'Zarządzaj wycieczkami', 'map', true)
+                +elementNawigacji('#', 'Zarządzaj użytkownikami', 'users', true)
+                +elementNawigacji('#', 'Zarządzaj recenzjami', 'star', true)
+                +elementNawigacji('#', 'Zarządzaj rezerwacjami', 'briefcase', true)
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Ustawienia twojego konta
+          // bez API usunięte, bo stosuję API
+          // form.form.form-user-data(action='/submit-dane', method='POST' enctype='multipart/form-data')
+
+          // z API
+          form.form.form-user-data
+            .form__group
+              label.form__label(for='name') Imię i nazwisko
+              input#name.form__input(type='text', value=`${uzytkownik.name}`, required, name='name')
+              // name służy do przekazywania danych w req.body 
+            .form__group.ma-bt-md
+              label.form__label(for='email') adres mejlowy
+              input#email.form__input(type='email', value=`${uzytkownik.email}`, required, name='email')
+              // name służy do przekazywania danych w req.body 
+            .form__group.form__photo-upload
+              img.form__user-photo(src=`/img/users/${uzytkownik.photo}`, alt='foto użytkownika')
+              input.form__upload(type='file', accept='image/*', id='photo', name = 'photo')
+              // uruchamia możliwość wyboru pliku
+              label(for='photo') Wybierz nowe foto
+            .form__group.right
+              button.btn.btn--small.btn--green Zapisz ustawienia
+        .line &nbsp;
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Zmiana hasła
+          form.form.form-user-password
+            .form__group
+              label.form__label(for='password-current') Obecne hasło
+              input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group
+              label.form__label(for='password') Nowe hasło
+              input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.ma-bt-lg
+              label.form__label(for='password-confirm') Potwierdź hasło
+              input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.right
+              button.btn.btn--small.btn--green.btn--save-password Zapisz hasło

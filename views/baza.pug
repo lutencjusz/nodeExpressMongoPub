@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Wycieczki | #{naglowek}
+    //- używa katalogu public
+    link(rel='stylesheet' href='/css/style.css') 
+    link(rel='shortcut icon' type='image/ico' href='/img/favicon.ico')
+    link(rel="stylesheet" href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
+    block naglowek
+
+  body
+    // importowanie nagłowka z pliku _nagłowek
+    include _naglowek
+
+    block zawartosc
+      h1 To jest przykładowa zawartość bloku
+
+    // importowanie stopki z pliku _stopka
+    include _stopka
+
+    // musi być w tym miejscu, bo inaczej DOM nie zdąży się załadować
+    // script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js')
+    // axios - bardzo popularna biblioteka do ładowania
+    // script(src='/js/mapbox.js')
+    // script(src='/js/login.js')
+    // dodaje skrypt w JAVA, który jest w katalogu ../public/js
+    script(src='https://js.stripe.com/v3/')
+    // skrypt do obsługi 2 kroku płatności, nie działa w wycieczka.pug
+    script(src='/js/bundle.js')

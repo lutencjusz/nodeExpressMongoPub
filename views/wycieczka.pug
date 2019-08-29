@@ -1,0 +1,98 @@
+extends baza
+
+include _recenzjaKarta
+
+block append naglowek
+  // dodaje blok do sekcji head zdefiniowanej w baza 
+  // dodaje skrypty związane z mapbox
+  // skrypt mapbox-gl.js zawiera biblioteki, które można wykorzystać
+  script(src='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js')
+  // musi być tutaj, bo z jakichś powodów nie działa z parcel
+  link(href='https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css', rel='stylesheet')
+
+mixin przegladElement(naglowek, opis, ikona)
+  .overview-box__detail
+    svg.overview-box__icon
+      use(xlink:href=`/img/icons.svg#icon-${ikona}`)
+    span.overview-box__label= naglowek
+    span.overview-box__text= opis
+
+block zawartosc
+  section.section-header
+    .header__hero
+      .header__hero-overlay &nbsp;
+      img.header__hero-img(src=`/img/tours/${wycieczka.imageCover}`, alt=`${wycieczka.name}`)
+
+    .heading-box
+      h1.heading-primary
+        span= `${wycieczka.name} wycieczka`
+      .heading-box__group
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-clock')
+          span.heading-box__text= `${wycieczka.duration} dni`
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-map-pin')
+          span.heading-box__text= wycieczka.startLocation.description
+
+  section.section-description
+    .overview-box
+      div
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Podsumowanie
+
+          - const data = wycieczka.startDates[0].toLocaleString('pl-PL')
+          +przegladElement('Następny wyjazd', data, 'calendar')
+          +przegladElement('Stopień trudności', wycieczka.difficulty, 'trending-up')
+          +przegladElement('Uczestników', `${wycieczka.maxGroupSize} osób`, 'user')
+          +przegladElement('Ranking', `${wycieczka.ratingsAverage} / 5`, 'star')
+
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Twoi przewodnicy wycieczki
+
+          each guide in wycieczka.guides
+            .overview-box__detail
+              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+
+              - if (guide.role === 'lead-guide')
+                span.overview-box__label Prowadzący
+              - if (guide.role === 'guide')
+                span.overview-box__label Przewodnik
+              span.overview-box__text= guide.name
+
+    .description-box
+      h2.heading-secondary.ma-bt-lg= wycieczka.name
+      p.description__text__bold= wycieczka.summary
+      - const paragraf = wycieczka.description.split('\n');
+      each p in paragraf
+        p.description__text= p
+
+  section.section-pictures
+    each img, i in wycieczka.images
+      .picture-box
+        img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+        // atrybut class umożliwa wprowadzenie zmiennej do nazwy klasy
+
+  section.section-map
+    #map(data-locations=`${JSON.stringify(wycieczka.locations)}`)
+    // umiieszcza lokalizacje jako zmienną string na stronie 
+
+  section.section-reviews
+    .reviews
+      each recenzja in wycieczka.recenzje
+        +recenzjaKarta(recenzja)
+
+  section.section-cta
+    .cta
+      .cta__img.cta__img--logo
+        img(src='/img/logo-white.png', alt='Natours logo')
+      img.cta__img.cta__img--1(src=`/img/tours/${wycieczka.images[1]}`, alt='Tour picture')
+      img.cta__img.cta__img--2(src=`/img/tours/${wycieczka.images[2]}`, alt='Tour picture')
+      .cta__content
+        h2.heading-secondary Na co czekasz?
+        p.cta__text= `${wycieczka.duration} dni. 1 przygoda. Niezapomniane przeżycia.\nNiech staną się twoim udziałem!`
+        if(uzytkownik)
+          button.btn.btn--green.span-all-rows#zarezerwuj-wycieczke(data-wycieczka-id=`${wycieczka.id}`) Zarezerwuj wycieczkę!
+        else
+          a.btn.btn--green.span-all-rows(href='/login') Zaloguj się

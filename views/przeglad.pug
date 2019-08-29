@@ -1,0 +1,49 @@
+extends baza
+
+block zawartosc
+  main.main
+    .card-container
+
+      each wycieczka in wycieczki
+        // pętla pokzująca wszystkie wycieczki
+        .card
+          // nagłowek wycieczki
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.card__picture-img(src=`/img/tours/${wycieczka.imageCover}`, alt=`${wycieczka.name}`)
+            h3.heading-tertirary
+              span= wycieczka.name
+          // szczegóły wycieczki
+          .card__details
+            h4.card__sub-heading= `${wycieczka.difficulty} ${wycieczka.duration}-dni wycieczki`
+            p.card__text= wycieczka.summary
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-map-pin')
+              span= wycieczka.startLocation.description
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-calendar')
+              span= wycieczka.startDates[0].toLocaleDateString('pl-PL')
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-flag')
+              span= `${wycieczka.locations.length} miejsca`
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-user')
+              span= `dla ${wycieczka.maxGroupSize} osób`
+          // stopka wycieczki
+          .card__footer
+            p
+              span.card__footer-value= `${wycieczka.price} zł`
+              | 
+              // '| ' tworzy spację między elementami
+              span.card__footer-text za osobę
+            p.card__ratings
+              span.card__footer-value= wycieczka.ratingsAverage
+              | 
+              // '| ' tworzy spację między elementami
+              span.card__footer-text= ` śr. ocen (${wycieczka.ratingsQuantity})`
+            a.btn.btn--green.btn--small(href=`/wycieczka/${wycieczka.slug}`) Szczegóły

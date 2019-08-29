@@ -1,0 +1,19 @@
+extends bazaEmail
+
+block zawartosc
+  // CONTENT
+  p Cześć #{imie},
+  p Zapomniałeś hasła? Kliknij załączony link #{url}, aby zresetować hasło...
+  p (Strona webowa jeszcze nie jest zaimplementowana)
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+    tbody
+      tr
+        td(align='left')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+              tr
+                td
+                  a(href=`${url}`, target='_blank') Zresetuj hasło
+  p Jeśli nie chcesz zmianić hasła, zignorój ten mejl.
+  p Z Pozdrowieniami,
+  p - Lutencjusz, CEO

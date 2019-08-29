@@ -1,0 +1,11 @@
+mixin recenzjaKarta(recenzja)
+  .reviews__card
+    .reviews__avatar
+      img.reviews__avatar-img(src=`/img/users/${recenzja.uzytkownik.photo}`, alt=`${recenzja.uzytkownik.name}`)
+      h6.reviews__user= recenzja.uzytkownik.name
+    p.reviews__text= recenzja.recenzja
+    .reviews__rating
+      each gwiazdka in [1, 2, 3, 4, 5]
+        svg.reviews__star(class=`reviews__star--${recenzja.ranking >= gwiazdka ? 'active' : 'inactive'}`)
+          // stosuje class aby wprowadzić zmienną do nazwy klasy
+          use(xlink:href='/img/icons.svg#icon-star')
