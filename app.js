@@ -7,6 +7,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors'); // umożliwia bezpiczen wykonywanie bardziej skomplikowanych zapytań jak: delete, create
 
 const app = express(); // dla express domyślną aplikacją jest app.js i musi być załadowana przed ...Routers
 
@@ -14,6 +15,14 @@ app.enable('trust proxy') // zaufanie do proxy - konieczne, żeby działało her
 
 app.set('view engine', 'pug'); // automatycznie ustawia template engine na pug
 app.set('views', path.join(__dirname, 'views')); // normalizuje zapis ścieżki dostępu do kat. views i pokazuje, gdzie jest katalog pug
+
+app.use(cors()); // uruchamia jako middleware CORS, który dodaje parametry do nagłowka
+// app.use(cors(),{
+//    origin: 'https://wycieczki-kurs.herokuapp.com' // ustawia CORS tylko na serwis
+//});
+
+app.option('*', cors()); // wszystkie opercje są dozwolone
+//app.option('/api/v1/wycieczki/:id', cors()); // bezpieczne będą tylko takie zapytania 
 
 app.use(express.static(path.join(__dirname, 'public'))); //udostępnia publicznie katalog w tym do elemtów z pub
 
