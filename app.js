@@ -21,7 +21,7 @@ app.use(cors()); // uruchamia jako middleware CORS, który dodaje parametry do n
 //    origin: 'https://wycieczki-kurs.herokuapp.com' // ustawia CORS tylko na serwis
 //});
 
-app.option('*', cors()); // wszystkie opercje są dozwolone
+app.options('*', cors()); // wszystkie opercje są dozwolone
 //app.option('/api/v1/wycieczki/:id', cors()); // bezpieczne będą tylko takie zapytania 
 
 app.use(express.static(path.join(__dirname, 'public'))); //udostępnia publicznie katalog w tym do elemtów z pub
