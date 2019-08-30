@@ -17,13 +17,13 @@ const pobierzToken = id => {
     });
 }
 
-const utworzWyslijToken = (nowyUzytkownik, statusCode, res) => { // tworzy token i wysyła pełne info o użytkowniku
+const utworzWyslijToken = (nowyUzytkownik, statusCode, req, res) => { // tworzy token i wysyła pełne info o użytkowniku
 
     const cookieOpcje = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 1000),
-        httpOnly: true // dostęp do cookie tylko przez przeglądarkę
+        httpOnly: true, // dostęp do cookie tylko przez przeglądarkę
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https'// cookie będzie wysyłany tylko przy połaczeniu HTTPS, bardzo specyficzne dla Heroku
     }
-    if (process.env.NODE_ENV.trim() === 'production') cookieOpcje.secure = true; // cookie będzie wysyłany tylko przy połaczeniu HTTPS na produkcji
 
     const token = pobierzToken(nowyUzytkownik._id); // pobieraz token użytkownika
     res.cookie('jwt', token, cookieOpcje);
@@ -50,7 +50,7 @@ exports.signup = przechwycAsyncErrors(async (req, res, next) => { // tworzenie u
     const url = `${req.protocol}://${req.get('host')}/me`; // tworzy link url do ustawień użytkownika w środowiska developerskiego
     await new Email(nowyUzytkownik, url).wyslijWitam(); // wysyła powitalny email
 
-    utworzWyslijToken(nowyUzytkownik, 201, res);
+    utworzWyslijToken(nowyUzytkownik, 201, req, res);
 });
 
 exports.login = przechwycAsyncErrors(async (req, res, next) => {
@@ -73,7 +73,7 @@ exports.login = przechwycAsyncErrors(async (req, res, next) => {
         return next(new AppError('authController: login: Nieprawidłowy email lub hasło', 401)); // return musi być, żeby nie zwracał błedu
     }
 
-    utworzWyslijToken(nowyUzytkownik, 200, res); // tworzy token i wysyła odpowiedź
+    utworzWyslijToken(nowyUzytkownik, 200, req, res); // tworzy token i wysyła odpowiedź
 
 });
 
@@ -161,7 +161,7 @@ exports.resetPassword = przechwycAsyncErrors(async (req, res, next) => {
     nowyUzytkownik.passwordResetToken = undefined;
     await nowyUzytkownik.save(); // zapisuje użytkownika w bazie z validacją middleware
 
-    utworzWyslijToken(nowyUzytkownik, 201, res); // tworzy token i wysyła odpowiedź
+    utworzWyslijToken(nowyUzytkownik, 201, req, res); // tworzy token i wysyła odpowiedź
 });
 
 exports.ochrona = przechwycAsyncErrors(async (req, res, next) => { // sprawdza, czy token jest prawidłowy
@@ -251,5 +251,5 @@ exports.zmianaHasla = przechwycAsyncErrors(async (req, res, next) => {
     // nowyUzytkownik.findByIdAndUpdate nie zadziała, save w uzytkownicyModel nie będzie działać
 
     // zaloguj się i wyślij JWT
-    utworzWyslijToken(nowyUzytkownik, 201, res); // tworzy token i wysyła odpowiedźS
+    utworzWyslijToken(nowyUzytkownik, 201, req, res); // tworzy token i wysyła odpowiedźS
 })

@@ -52,4 +52,11 @@ process.on('unhandledRejection', err => { // gdy np. hasło do bazy nie pasuje
         process.exit(1) // całkowite wyjście z aplikacji: 0 - ok, 1 - error
     });
 
-})
+});
+
+process.on('SIGNTERM', () => { // co 24 godziny Huroku wysysyła sygnał SIGNTERM do aplikacji
+    console.log('Otrzymałem SIGNTERM - restartuje aplikację...');
+    server.close(() =>{
+        console.log('Restart zakończony!')
+    });
+});

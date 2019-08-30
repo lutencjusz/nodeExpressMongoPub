@@ -9,6 +9,9 @@ const cookieParser = require('cookie-parser');
 const compression = require('compression');
 
 const app = express(); // dla express domyślną aplikacją jest app.js i musi być załadowana przed ...Routers
+
+app.enable('trust proxy') // zaufanie do proxy - konieczne, żeby działało heroku
+
 app.set('view engine', 'pug'); // automatycznie ustawia template engine na pug
 app.set('views', path.join(__dirname, 'views')); // normalizuje zapis ścieżki dostępu do kat. views i pokazuje, gdzie jest katalog pug
 
