@@ -8,6 +8,7 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors'); // umożliwia bezpiczen wykonywanie bardziej skomplikowanych zapytań jak: delete, create
+const bodyParser = require('body-parser');
 
 const app = express(); // dla express domyślną aplikacją jest app.js i musi być załadowana przed ...Routers
 
@@ -34,6 +35,7 @@ const uzytkownicyRouter = require('./routers/uzytkownicyRouters'); // moduł apl
 const recenzjeRouter = require('./routers/recenzjeRouters'); // moduł aplikacji
 const widokiRouter = require('./routers/widokiRouters'); // moduł aplikacji
 const platnosciRouter = require('./routers/platnosciRouters'); // moduł aplikacji
+const platnosciController = require('./controllers/platnosciController'); // moduł aplikacji
 
 // funkcje middleware
 app.use(helmet()); // middleware firmy 3, zawsze uruchamiane na początku, dodaje parametry bezpieczeństwa do nagłówka
@@ -54,8 +56,9 @@ const limitLogowania = rateLimit({ // ustawienia limitu logowania
 app.use('/api', limitLogowania); // uruchamia limiter tylko gdy w URL jest api
 if (process.env.NODE_ENV === 'development') console.log('załadowano limit logowania na 100/h...');
 
+app.post('/punkt-koncowy-sukces', bodyParser.raw({type: 'application/json'}), platnosciController.weebhookCheckoutSucess); // żeby następny middleware nie przekonwertował na json, bo odpowiedź idzie w row
 
-app.use(express.json({ // middleware - dostępne są zawartości w req.body i res.body.
+app.use(express.json({ // middleware - konweruje wszystko na json, więc dostępne są zawartości w req.body i res.body.
     limit: '10kb' // Ustawia limit body na 10kb
 }));
 if (process.env.NODE_ENV === 'development') console.log('ustawiono limit dla req, res.body na 10kb...');

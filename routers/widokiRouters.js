@@ -10,7 +10,10 @@ Router.get('/moje-wycieczki', authController.ochrona, widokiController.getMojeWy
 
 Router.use(authController.zalogowany); // ustawia locals.uzytkownik, jeżeli zalogowany dla wszystkich poniżej
 
-Router.get('/', platnosciController.utworzCheckoutPlatnosci, widokiController.getPrzegladWycieczek); //platnosciController.utworzCheckoutPlatnosci dodaje płatności do bazy 
+Router.get('/', 
+    // platnosciController.utworzCheckoutPlatnosci, //platnosciController.utworzCheckoutPlatnosci dodaje płatności do bazy, zastąpione przez weebhookCheckoutSucess
+    widokiController.getPrzegladWycieczek
+); 
 Router.get('/wycieczka/:slug', widokiController.getWycieczka);
 Router.get('/login', widokiController.getLogin);
 Router.post('/submit-dane', authController.ochrona, widokiController.submitDaneUzytkownika);
