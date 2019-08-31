@@ -18,6 +18,9 @@ import {
 import {
     zakupWycieczke
 } from './stripe';
+import {
+    pokazAlert
+} from './alert'
 
 // elementy DOM
 const zmiennaMap = document.getElementById('map');
