@@ -5,6 +5,8 @@ const authController = require('../controllers/authController');
 
 const Router = express.Router();
 
+Router.use(widokiController.alarmy); // uruchamia się dla wszystkich żądań
+
 Router.get('/me', authController.ochrona, widokiController.getKonto); // authController.ochrona nie powinno się łączyć z authController.zalogowany
 Router.get('/moje-wycieczki', authController.ochrona, widokiController.getMojeWycieczki); // authController.ochrona nie powinno się łączyć z authController.zalogowany
 

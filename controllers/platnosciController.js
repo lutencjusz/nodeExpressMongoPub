@@ -6,13 +6,19 @@ const przechwycAsyncErrors = require('../utils/przechwycAsyncErrors');
 const fabrykaOperacji = require('./fabrykaOperacji');
 // const AppError = require('./../utils/appError');
 
+exports.alarmy = (req, res, next) =>{
+    const {alarm} = req.query; // pobiera parametr alarm
+    if (alarm === 'zaplacone') res.locals.alarm = 'Twoja płatność została pobrana. Sprawdź swój email dla potwierdzenia'; // ustawia alarm dla skryptów java
+    next();
+}
+
 exports.checkoutSesja = przechwycAsyncErrors(async (req, res, next) => {
     const wycieczka = await Wycieczki.findById(req.params.idWycieczki);
 
     const sesja = await stripe.checkout.sessions.create({ // dokonuje płatności przez Stripe
         payment_method_types: ['card'],
         // success_url: `${req.protocol}://${req.get('host')}/?wycieczka=${wycieczka.id}&uzytkownik=${req.nowyUzytkownik.id}&cena=${wycieczka.price}`, // zastąpione przez weebhookCheckoutSucess
-        success_url: `${req.protocol}://${req.get('host')}/moje-wycieczki`,
+        success_url: `${req.protocol}://${req.get('host')}/moje-wycieczki?alarm=zaplacone`, // ustawia alarm, co uruchomi okienko html
         cancel_url: `${req.protocol}://${req.get('host')}/wycieczka/${wycieczka.slug}`,
         customer_email: req.nowyUzytkownik.email,
         client_reference_id: req.params.idWycieczki, // potrzebny idWycieczki, żeby potem zapisać do bazy

@@ -26,6 +26,8 @@ const wylogowanie = document.querySelector('.nav__el--logout'); // czy został w
 const uzytkownikUstawieniaFormularz = document.querySelector('.form-user-data');
 const uzytkownikHasloFormularz = document.querySelector('.form-user-password');
 const zakupPrzycisk = document.getElementById('zarezerwuj-wycieczke');
+const alarmKomunikat = document.querySelector('body').dataset.alarm;
+
 // delegacje
 if (zmiennaMap) {
     const lokalizacje = JSON.parse(zmiennaMap.dataset.locations);
@@ -93,4 +95,8 @@ if (zakupPrzycisk) {
         // {wycieczkaId} zastępuje wycieczkaId = e.target.dataset.wycieczkaId
         zakupWycieczke(wycieczkaId);
     });
+}
+
+if(alarmKomunikat) {
+    pokazAlert('success', alarmKomunikat, 5);
 }
