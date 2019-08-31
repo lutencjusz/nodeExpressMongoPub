@@ -1,11 +1,11 @@
 const express = require('express');
 const widokiController = require('../controllers/widokiController');
 const authController = require('../controllers/authController');
-// const platnosciController = require('../controllers/platnosciController')
+const platnosciController = require('../controllers/platnosciController')
 
 const Router = express.Router();
 
-Router.use(widokiController.alarmy); // uruchamia się dla wszystkich żądań
+Router.use(platnosciController.alarmy); // uruchamia się dla wszystkich żądań
 
 Router.get('/me', authController.ochrona, widokiController.getKonto); // authController.ochrona nie powinno się łączyć z authController.zalogowany
 Router.get('/moje-wycieczki', authController.ochrona, widokiController.getMojeWycieczki); // authController.ochrona nie powinno się łączyć z authController.zalogowany
