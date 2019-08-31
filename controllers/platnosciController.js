@@ -12,14 +12,14 @@ exports.checkoutSesja = przechwycAsyncErrors(async (req, res, next) => {
     const sesja = await stripe.checkout.sessions.create({ // dokonuje płatności przez Stripe
         payment_method_types: ['card'],
         // success_url: `${req.protocol}://${req.get('host')}/?wycieczka=${wycieczka.id}&uzytkownik=${req.nowyUzytkownik.id}&cena=${wycieczka.price}`, // zastąpione przez weebhookCheckoutSucess
-        success_url: `${req.protocol}://${req.get('host')}/`,
+        success_url: `${req.protocol}://${req.get('host')}/moje-wycieczki`,
         cancel_url: `${req.protocol}://${req.get('host')}/wycieczka/${wycieczka.slug}`,
         customer_email: req.nowyUzytkownik.email,
         client_reference_id: req.params.idWycieczki, // potrzebny idWycieczki, żeby potem zapisać do bazy
         line_items: [{
             name: `${wycieczka.name}`,
             description: `${wycieczka.description}`,
-            images: [`https://www.natours.dev/img/tours/${wycieczka.imageCover}`],
+            images: [`${req.protocol}://${req.get('host')}/img/tours/${wycieczka.imageCover}`],
             amount: wycieczka.price * 100, // musi być *100, żeby weszły grosze.
             currency: 'pln',
             quantity: 1
@@ -52,8 +52,8 @@ exports.utworzCheckoutPlatnosci = przechwycAsyncErrors(async (req, res, next) =>
 const utworzCheckoutPlatnosci = async sesja =>{
     const wycieczka = sesja.client_reference_id;
     const uzytkownik = (await Uzytkownicy.findOne({email: sesja.customer_email})).id; // pobiera tylko id na podstawie email
-    const cena = sesja.line_items[0].amount / 100;
-    
+    const cena = sesja.display_items[0].amount / 100;
+
     await Platnosci.create({
         wycieczka,
         uzytkownik,
@@ -73,8 +73,11 @@ exports.weebhookCheckoutSucess = (req, res, next) =>{ // metoda używana w strip
     } catch (err) {
         return res.status(400).send(`Błąd w weebhookCheckoutSucess ${err.message}`); // odsyła błąd do stripe, że coś nie działa
     }
+    console.log(zdarzenie.type);
+    if (zdarzenie.type === 'checkout.session.completed') {
+        utworzCheckoutPlatnosci(zdarzenie.data.object);
+    }
 
-    if (zdarzenie.type === 'checkout.session.completed') utworzCheckoutPlatnosci(zdarzenie.data.object);
 
     res.status(200).json({received: true}); // odsyła do stripe, że jest ok
     
