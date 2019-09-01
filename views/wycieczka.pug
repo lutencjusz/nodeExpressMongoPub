@@ -71,12 +71,12 @@ block zawartosc
   section.section-pictures
     each img, i in wycieczka.images
       .picture-box
-        img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+        img.picture-box__img(src=`/img/tours/${img}`, alt=`Wycieczka ${i + 1}`, class=`picture-box__img--${i + 1}`)
         // atrybut class umożliwa wprowadzenie zmiennej do nazwy klasy
 
   section.section-map
     #map(data-locations=`${JSON.stringify(wycieczka.locations)}`)
-    // umiieszcza lokalizacje jako zmienną string na stronie 
+    // umieszcza lokalizacje jako zmienną string na stronie 
 
   section.section-reviews
     .reviews
@@ -86,13 +86,13 @@ block zawartosc
   section.section-cta
     .cta
       .cta__img.cta__img--logo
-        img(src='/img/logo-white.png', alt='Natours logo')
-      img.cta__img.cta__img--1(src=`/img/tours/${wycieczka.images[1]}`, alt='Tour picture')
-      img.cta__img.cta__img--2(src=`/img/tours/${wycieczka.images[2]}`, alt='Tour picture')
+        img(src='/img/logo-white.png', alt='Wycieczki logo')
+      img.cta__img.cta__img--1(src=`/img/tours/${wycieczka.images[1]}`, alt='Obraz z wycieczki')
+      img.cta__img.cta__img--2(src=`/img/tours/${wycieczka.images[2]}`, alt='Obraz z wycieczki')
       .cta__content
         h2.heading-secondary Na co czekasz?
         p.cta__text= `${wycieczka.duration} dni. 1 przygoda. Niezapomniane przeżycia.\nNiech staną się twoim udziałem!`
         if(uzytkownik)
-          button.btn.btn--green.span-all-rows#zarezerwuj-wycieczke(data-wycieczka-id=`${wycieczka.id}`) Zarezerwuj wycieczkę!
+          button.btn.btn--green.span-all-rows#zarezerwuj-wycieczke(data-wycieczka-id=`${wycieczka.id}`) Kup wycieczkę!
         else
           a.btn.btn--green.span-all-rows(href='/login') Zaloguj się
